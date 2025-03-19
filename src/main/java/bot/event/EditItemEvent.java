@@ -1,19 +1,20 @@
 package bot.event;
 
+import bot.entity.ItemId;
+import bot.entity.ListTitle;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
-public class EditItemEvent extends Event
+public class EditItemEvent implements AcceptsItemEvent, AcceptsListEvent
 {
-    public static final  String COMMAND         = "edit-item";
-    private static final String OPTION_NEW_NAME = "new-name";
-    private final        int    id;
-    private final        String newList;
-    private final        String newName;
+    public static final  String    COMMAND         = "edit-item";
+    private static final String    OPTION_NEW_NAME = "new-name";
+    private final        ItemId    itemId;
+    private final        ListTitle newListTitle;
+    private final        String    newName;
 
     public EditItemEvent(@NotNull SlashCommandInteractionEvent event) throws Exception
     {
@@ -27,30 +28,28 @@ public class EditItemEvent extends Event
             throw new Exception("No new attributes given to edit item.");
         }
 
-        id = idOption.getAsInt();
+        itemId = new ItemId(idOption);
         newName = newNameOption != null ? newNameOption.getAsString() : null;
-        newList = newListOption != null ? newListOption.getAsString() : null;
+        newListTitle = newListOption != null ? new ListTitle(newListOption.getAsString()) : null;
     }
 
     public static void addCommand(Guild guild)
     {
         guild.upsertCommand(COMMAND, "Edit item attributes.")
             .addOption(OptionType.STRING, OPTION_ITEM, "Item.", true, true)
-            .addOptions(
-                new OptionData(OptionType.STRING, OPTION_NEW_NAME, "New name.", false),
-                new OptionData(OptionType.STRING, OPTION_LIST, "List to move item to.", false, true)
-            )
+            .addOption(OptionType.STRING, OPTION_NEW_NAME, "New name.", false)
+            .addOption(OptionType.STRING, OPTION_LIST, "List to move item to.", false, true)
             .queue();
     }
 
-    public int getId()
+    public ItemId getItemId()
     {
-        return id;
+        return itemId;
     }
 
-    public String getNewList()
+    public ListTitle getNewListTitle()
     {
-        return newList;
+        return newListTitle;
     }
 
     public String getNewName()

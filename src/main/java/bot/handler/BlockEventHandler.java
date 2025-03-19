@@ -17,8 +17,8 @@ public class BlockEventHandler
         Message catalogMessage = MessageManager.findCatalogMessage(channel);
         Catalog catalog        = EmbedConverter.convertMessageToCatalog(catalogMessage);
 
-        ItemId blockedItemId  = new ItemId(event.getBlockedId());
-        ItemId blockingItemId = new ItemId(event.getBlockingId());
+        ItemId blockedItemId  = event.getBlockedItemId();
+        ItemId blockingItemId = event.getBlockingItemId();
 
         if (blockedItemId.equals(blockingItemId)) {
             throw new Exception("An item cannot be blocked by itself.");

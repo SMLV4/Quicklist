@@ -1,5 +1,6 @@
 package bot.event;
 
+import bot.entity.ItemId;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -10,8 +11,8 @@ abstract public class BlockingEvent
 {
     public static final String OPTION_BLOCKED  = "blocked";
     public static final String OPTION_BLOCKING = "blocking";
-    private final       int    blockedId;
-    private final       int    blockingId;
+    private final       ItemId blockedItemId;
+    private final       ItemId blockingItemId;
 
     protected BlockingEvent(@NotNull SlashCommandInteractionEvent event)
     {
@@ -21,8 +22,12 @@ abstract public class BlockingEvent
         assert blockedOption != null;
         assert blockingOption != null;
 
-        blockedId = blockedOption.getAsInt();
-        blockingId = blockingOption.getAsInt();
+        try {
+            blockedItemId = new ItemId(blockedOption);
+            blockingItemId = new ItemId(blockingOption);
+        } catch (Throwable exception) {
+            throw new RuntimeException("Item could not be found. Please try selecting one from the autocomplete list.");
+        }
     }
 
     protected static CommandCreateAction addOptions(CommandCreateAction command)
@@ -31,13 +36,13 @@ abstract public class BlockingEvent
             .addOption(OptionType.STRING, OPTION_BLOCKING, "Blocking item.", true, true);
     }
 
-    public int getBlockedId()
+    public ItemId getBlockedItemId()
     {
-        return blockedId;
+        return blockedItemId;
     }
 
-    public int getBlockingId()
+    public ItemId getBlockingItemId()
     {
-        return blockingId;
+        return blockingItemId;
     }
 }

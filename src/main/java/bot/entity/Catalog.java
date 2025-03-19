@@ -39,7 +39,25 @@ public class Catalog
         throw new Exception("Item " + id + " not found.");
     }
 
-    public List getList(ListTitle title)
+    public ArrayList<List> getLists()
+    {
+        return lists;
+    }
+
+    @NotNull
+    public List getNotNullList(ListTitle title) throws Exception
+    {
+        for (List list : lists) {
+            if (list.getListTitle()
+                .is(title)) {
+                return list;
+            }
+        }
+
+        throw new Exception("List " + title.toString() + " not found.");
+    }
+
+    public List getNullableList(ListTitle title)
     {
         for (List list : lists) {
             if (list.getListTitle()
@@ -49,23 +67,6 @@ public class Catalog
         }
 
         return null;
-    }
-
-    public List getList(String listIdentifier)
-    {
-        for (List list : lists) {
-            ListTitle listTitle = list.getListTitle();
-            if (listTitle.is(listIdentifier)) {
-                return list;
-            }
-        }
-
-        return null;
-    }
-
-    public ArrayList<List> getLists()
-    {
-        return lists;
     }
 
     public boolean hasItem(ItemId id)
@@ -82,7 +83,7 @@ public class Catalog
 
     public boolean hasList(ListTitle title)
     {
-        return getList(title) != null;
+        return getNullableList(title) != null;
     }
 
     public int highestId()
@@ -128,16 +129,11 @@ public class Catalog
         throw new Exception("Item " + id + " does not exist.");
     }
 
-    public void removeList(String listIdentifier) throws Exception
+    public void removeList(ListTitle listTitle) throws Exception
     {
-        List list = getList(listIdentifier);
-        if (list == null) {
-            throw new Exception("List " + listIdentifier + " does not exist.");
-        }
-
+        List list = getNotNullList(listTitle);
         for (Item item : list.getItems()) {
-            list.getItems()
-                .remove(item);
+            list.getItems().remove(item);
             removeBlockedIdFromItems(item.getId());
         }
 

@@ -1,18 +1,19 @@
 package bot.event;
 
+import bot.entity.ListTitle;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.NotNull;
 
-public class AddItemEvent extends Event
+public class AddItemEvent implements AcceptsListEvent
 {
-    public static final  String COMMAND       = "add-item";
-    private static final String DEFAULT_TITLE = "Quicklist";
-    private static final String OPTION_NAME   = "name";
-    private final        String list;
-    private final        String name;
+    public static final  String    COMMAND       = "add-item";
+    private static final String    DEFAULT_TITLE = "Quicklist";
+    private static final String    OPTION_NAME   = "name";
+    private final        ListTitle listTitle;
+    private final        String    name;
 
     public AddItemEvent(@NotNull SlashCommandInteractionEvent event)
     {
@@ -22,7 +23,7 @@ public class AddItemEvent extends Event
         assert nameOption != null;
 
         this.name = nameOption.getAsString();
-        this.list = listOption != null ? listOption.getAsString() : DEFAULT_TITLE;
+        this.listTitle = new ListTitle(listOption != null ? listOption.getAsString() : DEFAULT_TITLE);
     }
 
     public static void addCommand(Guild guild)
@@ -39,9 +40,9 @@ public class AddItemEvent extends Event
             .queue();
     }
 
-    public String getList()
+    public ListTitle getListTitle()
     {
-        return list;
+        return listTitle;
     }
 
     public String getName()

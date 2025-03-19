@@ -1,16 +1,17 @@
 package bot.event;
 
+import bot.entity.ListTitle;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.NotNull;
 
-public class RemoveListEvent extends Event
+public class RemoveListEvent implements AcceptsListEvent
 {
     public static final String COMMAND = "remove-list";
 
-    private final String listIdentifier;
+    private final ListTitle listTitle;
 
     public RemoveListEvent(@NotNull SlashCommandInteractionEvent event)
     {
@@ -18,7 +19,7 @@ public class RemoveListEvent extends Event
 
         assert listOption != null;
 
-        listIdentifier = listOption.getAsString();
+        listTitle = new ListTitle(listOption.getAsString());
     }
 
     public static void addCommand(Guild guild)
@@ -28,8 +29,8 @@ public class RemoveListEvent extends Event
             .queue();
     }
 
-    public String getListIdentifier()
+    public ListTitle getListTitle()
     {
-        return listIdentifier;
+        return listTitle;
     }
 }

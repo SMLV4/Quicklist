@@ -98,6 +98,11 @@ public class Item
         return notes;
     }
 
+    public boolean hasNotes()
+    {
+        return !notes.isEmpty();
+    }
+
     public boolean is(ItemId id)
     {
         return this.id.equals(id);

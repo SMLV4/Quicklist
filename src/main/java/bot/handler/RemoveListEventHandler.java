@@ -15,7 +15,7 @@ public class RemoveListEventHandler
         Message catalogMessage = MessageManager.findCatalogMessage(channel);
         Catalog catalog        = EmbedConverter.convertMessageToCatalog(catalogMessage);
 
-        catalog.removeList(event.getListIdentifier());
+        catalog.removeList(event.getListTitle());
 
         MessageManager.updateCatalogMessage(channel, catalogMessage, catalog);
         MessageManager.cleanup(channel, catalogMessage);

@@ -1,5 +1,6 @@
 package bot.entity;
 
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemId implements Comparable<ItemId>
@@ -11,6 +12,22 @@ public class ItemId implements Comparable<ItemId>
 
     public ItemId(int value)
     {
+        assert value > 0;
+
+        this.value = value;
+    }
+
+    public ItemId(OptionMapping option)
+    {
+        int value;
+        try {
+            value = option.getAsInt();
+        } catch (Throwable exception) {
+            throw new RuntimeException("Item could not be found. Please try selecting one from the autocomplete list.");
+        }
+
+        assert value > 0;
+
         this.value = value;
     }
 
@@ -28,11 +45,6 @@ public class ItemId implements Comparable<ItemId>
     public boolean equals(ItemId that)
     {
         return this.value == that.getValue();
-    }
-
-    public String getCode()
-    {
-        return String.format("#%0" + NUM_LENGTH + "d", value);
     }
 
     public int getValue()

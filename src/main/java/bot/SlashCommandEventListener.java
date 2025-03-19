@@ -33,8 +33,7 @@ class SlashCommandEventListener extends ListenerAdapter
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event)
     {
-        event.deferReply()
-            .queue();
+        event.deferReply().queue();
 
         try {
             String commandName = event.getName();

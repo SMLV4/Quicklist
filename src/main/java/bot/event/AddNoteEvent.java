@@ -1,16 +1,17 @@
 package bot.event;
 
+import bot.entity.ItemId;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.NotNull;
 
-public class AddNoteEvent extends Event
+public class AddNoteEvent implements AcceptsItemEvent
 {
     public static final  String COMMAND     = "add-note";
     private static final String OPTION_NOTE = "note";
-    private final        int    itemId;
+    private final        ItemId itemId;
     private final        String note;
 
     public AddNoteEvent(@NotNull SlashCommandInteractionEvent event)
@@ -21,7 +22,7 @@ public class AddNoteEvent extends Event
         assert itemIdOption != null;
         assert noteOption != null;
 
-        this.itemId = itemIdOption.getAsInt();
+        this.itemId = new ItemId(itemIdOption);
         this.note = noteOption.getAsString();
     }
 
@@ -33,7 +34,7 @@ public class AddNoteEvent extends Event
             .queue();
     }
 
-    public int getItemId()
+    public ItemId getItemId()
     {
         return itemId;
     }

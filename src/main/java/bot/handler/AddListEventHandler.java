@@ -20,7 +20,7 @@ public class AddListEventHandler
         Catalog catalog        = EmbedConverter.convertMessageToCatalog(catalogMessage);
 
         ListTitle listTitle    = new ListTitle(event.getTitle(), event.getShortcut());
-        List      existingList = catalog.getList(listTitle);
+        List      existingList = catalog.getNullableList(listTitle);
         if (existingList != null) {
             if (existingList.getListTitle().isTitle(listTitle.getTitle())) {
                 throw new Exception("List " + listTitle.getTitle() + " already exists.");

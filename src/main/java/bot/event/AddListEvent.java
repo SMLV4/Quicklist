@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
-public class AddListEvent extends Event
+public class AddListEvent
 {
     public static final String COMMAND         = "add-list";
     public static final String DEFAULT_COLOR   = "000000";

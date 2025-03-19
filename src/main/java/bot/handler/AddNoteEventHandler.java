@@ -4,7 +4,6 @@ import bot.EmbedConverter;
 import bot.MessageManager;
 import bot.entity.Catalog;
 import bot.entity.Item;
-import bot.entity.ItemId;
 import bot.event.AddNoteEvent;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -17,9 +16,7 @@ public class AddNoteEventHandler
         Message catalogMessage = MessageManager.findCatalogMessage(channel);
         Catalog catalog        = EmbedConverter.convertMessageToCatalog(catalogMessage);
 
-        ItemId itemId = new ItemId(event.getItemId());
-        Item   item   = catalog.getItem(itemId);
-
+        Item item = catalog.getItem(event.getItemId());
         item.addNote(event.getNote());
 
         MessageManager.updateCatalogMessage(channel, catalogMessage, catalog);

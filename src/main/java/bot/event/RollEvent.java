@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.jetbrains.annotations.NotNull;
 
-public class RollEvent extends Event
+public class RollEvent
 {
     public static final String          COMMAND = "roll";
     private final       InteractionHook hook;

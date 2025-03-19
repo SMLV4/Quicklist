@@ -1,22 +1,22 @@
 package bot.event;
 
+import bot.entity.ListTitle;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
-public class EditListEvent extends Event
+public class EditListEvent implements AcceptsListEvent
 {
-    public static final String COMMAND             = "edit-list";
-    public static final String OPTION_NEW_COLOR    = "new-color";
-    public static final String OPTION_NEW_SHORTCUT = "new-shortcut";
-    public static final String OPTION_NEW_TITLE    = "new-title";
-    private final       String list;
-    private final       String newColor;
-    private final       String newShortcut;
-    private final       String newTitle;
+    public static final String    COMMAND             = "edit-list";
+    public static final String    OPTION_NEW_COLOR    = "new-color";
+    public static final String    OPTION_NEW_SHORTCUT = "new-shortcut";
+    public static final String    OPTION_NEW_TITLE    = "new-title";
+    private final       ListTitle listTitle;
+    private final       String    newColor;
+    private final       String    newShortcut;
+    private final       String    newTitle;
 
     public EditListEvent(@NotNull SlashCommandInteractionEvent event) throws Exception
     {
@@ -31,7 +31,7 @@ public class EditListEvent extends Event
             throw new Exception("No new attributes given to edit list.");
         }
 
-        list = listOption.getAsString();
+        listTitle = new ListTitle(listOption.getAsString());
         newColor = newColorOption != null ? newColorOption.getAsString() : null;
         newTitle = newTileOption != null ? newTileOption.getAsString() : null;
         newShortcut = newShortcutOption != null ? newShortcutOption.getAsString() : null;
@@ -41,17 +41,15 @@ public class EditListEvent extends Event
     {
         guild.upsertCommand(COMMAND, "Edit list attributes.")
             .addOption(OptionType.STRING, OPTION_LIST, "List to edit.", true, true)
-            .addOptions(
-                new OptionData(OptionType.STRING, OPTION_NEW_TITLE, "New title.", false),
-                new OptionData(OptionType.STRING, OPTION_NEW_COLOR, "Hex color for the border. Ex: FF0000.", false),
-                new OptionData(OptionType.STRING, OPTION_NEW_SHORTCUT, "Abbreviation used to add new items.", false)
-            )
+            .addOption(OptionType.STRING, OPTION_NEW_TITLE, "New title.", false)
+            .addOption(OptionType.STRING, OPTION_NEW_COLOR, "Hex color for the border. Ex: FF0000.", false)
+            .addOption(OptionType.STRING, OPTION_NEW_SHORTCUT, "Abbreviation used to add new items.", false)
             .queue();
     }
 
-    public String getList()
+    public ListTitle getListTitle()
     {
-        return list;
+        return listTitle;
     }
 
     public String getNewColor()

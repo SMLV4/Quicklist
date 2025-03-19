@@ -21,11 +21,7 @@ public class AddItemEventHandler
         Message catalogMessage = MessageManager.findCatalogMessage(channel);
         Catalog catalog        = EmbedConverter.convertMessageToCatalog(catalogMessage);
 
-        String listIdentifier = event.getList();
-        List   list           = catalog.getList(listIdentifier);
-        if (list == null) {
-            throw new Exception("List " + listIdentifier + " not found.");
-        }
+        List list = catalog.getNotNullList(event.getListTitle());
 
         ListTitle listTitle = list.getListTitle();
         list.addItem(createNewItem(event, catalog, listTitle));

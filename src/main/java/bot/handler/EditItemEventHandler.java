@@ -6,6 +6,7 @@ import bot.entity.Catalog;
 import bot.entity.Item;
 import bot.entity.ItemId;
 import bot.entity.List;
+import bot.entity.ListTitle;
 import bot.event.EditItemEvent;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -18,21 +19,17 @@ public class EditItemEventHandler
         Message catalogMessage = MessageManager.findCatalogMessage(channel);
         Catalog catalog        = EmbedConverter.convertMessageToCatalog(catalogMessage);
 
-        ItemId itemId = new ItemId(event.getId());
-        Item   item   = catalog.getItem(itemId);
+        ItemId itemId = event.getItemId();
+        Item   item   = catalog.getItem(event.getItemId());
 
         String newName = event.getNewName();
         if (newName != null) {
             item.updateName(newName);
         }
 
-        String newListIdentifier = event.getNewList();
-        if (newListIdentifier != null) {
-            List list = catalog.getList(newListIdentifier);
-            if (list == null) {
-                throw new Exception("List " + newListIdentifier + " not found.");
-            }
-
+        ListTitle newListTitle = event.getNewListTitle();
+        if (newListTitle != null) {
+            List list = catalog.getNotNullList(newListTitle);
             catalog.removeItemFromList(itemId);
             list.addItem(item);
         }

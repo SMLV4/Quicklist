@@ -22,11 +22,7 @@ public class EditListEventHandler
         String newShortcut = event.getNewShortcut();
         String newColor    = event.getNewColor();
 
-        String listIdentifier = event.getList();
-        List   list           = catalog.getList(listIdentifier);
-        if (list == null) {
-            throw new Exception("List " + listIdentifier + " not found.");
-        }
+        List list = catalog.getNotNullList(event.getListTitle());
 
         if (newTitle != null) {
             list.updateTitle(newTitle);

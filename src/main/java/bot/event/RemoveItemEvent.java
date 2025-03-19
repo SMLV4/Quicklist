@@ -1,15 +1,16 @@
 package bot.event;
 
+import bot.entity.ItemId;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.NotNull;
 
-public class RemoveItemEvent extends Event
+public class RemoveItemEvent implements AcceptsItemEvent
 {
     public static final String COMMAND = "remove-item";
-    private final       int    id;
+    private final       ItemId    itemId;
 
     public RemoveItemEvent(@NotNull SlashCommandInteractionEvent event)
     {
@@ -17,7 +18,7 @@ public class RemoveItemEvent extends Event
 
         assert idOption != null;
 
-        id = idOption.getAsInt();
+        itemId = new ItemId(idOption);
     }
 
     public static void addCommand(Guild guild)
@@ -27,8 +28,8 @@ public class RemoveItemEvent extends Event
             .queue();
     }
 
-    public int getId()
+    public ItemId getItemId()
     {
-        return id;
+        return itemId;
     }
 }
