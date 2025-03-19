@@ -8,7 +8,7 @@ public class Item
     public static final  String            BLOCKED_BULLET   = ":small_orange_diamond:";
     public static final  String            UNBLOCKED_BULLET = ":white_small_square:";
     private static final String            BLOCKING_EMOJI   = ":no_entry:";
-    private static final String            NOTE_BULLET      = ":black_small_square:";
+    private static final String            NOTE_BULLET      = ":black_small_square: ✦";
     private final        ArrayList<ItemId> blockingIds;
     private final        ItemId            id;
     private final        ListTitle         listTitle;
@@ -53,7 +53,7 @@ public class Item
         int lineCount = 0;
         for (String line : itemLines) {
             if (lineCount > 0) {
-                notes.add(line.substring(line.indexOf(".") + 1).trim());
+                notes.add(line.substring(line.indexOf(NOTE_BULLET) + NOTE_BULLET.length()).trim());
             }
             lineCount++;
         }
@@ -156,13 +156,10 @@ public class Item
             }
         }
 
-        int noteIndex = 1;
         for (String note : notes) {
             result.append("\n-# ")
                 .append(NOTE_BULLET)
                 .append(" ")
-                .append(noteIndex++)
-                .append(". ")
                 .append(note);
         }
 
