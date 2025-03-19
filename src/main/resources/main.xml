@@ -19,12 +19,19 @@
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetObject" ref="jda_builder"/>
         <property name="targetMethod" value="addEventListeners"/>
-        <property name="arguments" ref="event_listener"/>
+        <property name="arguments">
+            <list>
+                <ref bean="auto_complete_event_listener"/>
+                <ref bean="slash_command_event_listener"/>
+            </list>
+        </property>
     </bean>
 
-
-    <bean id="event_listener"
-          class="bot.EventListener">
+    <bean id="auto_complete_event_listener"
+          class="bot.AutoCompleteEventListener">
+    </bean>
+    <bean id="slash_command_event_listener"
+          class="bot.SlashCommandEventListener">
     </bean>
 
 </beans>

@@ -73,6 +73,11 @@ public class Item
         notes.add(note);
     }
 
+    public ArrayList<ItemId> getBlockingIds()
+    {
+        return blockingIds;
+    }
+
     public ItemId getId()
     {
         return id;
@@ -96,6 +101,11 @@ public class Item
     public boolean is(ItemId id)
     {
         return this.id.equals(id);
+    }
+
+    public boolean isBlocked()
+    {
+        return !blockingIds.isEmpty();
     }
 
     public boolean isBlockedBy(ItemId id)
@@ -157,10 +167,5 @@ public class Item
     public void updateName(String name)
     {
         this.name = name;
-    }
-
-    private boolean isBlocked()
-    {
-        return !blockingIds.isEmpty();
     }
 }
