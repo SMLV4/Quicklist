@@ -6,7 +6,6 @@ import java.util.List;
 public class Item
 {
     public static final  String            BLOCKED_BULLET   = ":small_orange_diamond:";
-    public static final  String            BULLET           = "-";
     public static final  String            UNBLOCKED_BULLET = ":white_small_square:";
     private static final String            BLOCKING_EMOJI   = ":no_entry:";
     private static final String            NOTE_BULLET      = ":black_small_square:";
