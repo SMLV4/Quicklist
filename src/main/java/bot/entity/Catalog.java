@@ -2,6 +2,7 @@ package bot.entity;
 
 import bot.HighestIdComparator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -100,10 +101,13 @@ public class Catalog
             .getValue();
     }
 
-    public Item random()
+    public Item random(@Nullable ListTitle listTitle) throws Exception
     {
-        ArrayList<Item> items = getAllItems();
-        int             roll  = (new Random()).nextInt(items.size());
+        ArrayList<Item> items = null != listTitle
+            ? getNotNullList(listTitle).getItems()
+            : getAllItems();
+
+        int roll = (new Random()).nextInt(items.size());
 
         return items.get(roll);
     }
@@ -133,7 +137,6 @@ public class Catalog
     {
         List list = getNotNullList(listTitle);
         for (Item item : list.getItems()) {
-            list.getItems().remove(item);
             removeBlockedIdFromItems(item.getId());
         }
 

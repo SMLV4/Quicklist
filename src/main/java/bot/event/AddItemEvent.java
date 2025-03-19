@@ -1,17 +1,18 @@
 package bot.event;
 
 import bot.entity.ListTitle;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.jetbrains.annotations.NotNull;
 
-public class AddItemEvent implements AcceptsListEvent
+public class AddItemEvent implements AcceptsListEvent, AddCommand
 {
-    public static final  String    COMMAND       = "add-item";
     private static final String    DEFAULT_TITLE = "Quicklist";
     private static final String    OPTION_NAME   = "name";
+    private static final String    SUBCOMMAND    = "item";
+    public static final  String    COMMAND_PATH  = MAIN_COMMAND + "/" + SUBCOMMAND;
     private final        ListTitle listTitle;
     private final        String    name;
 
@@ -26,9 +27,9 @@ public class AddItemEvent implements AcceptsListEvent
         this.listTitle = new ListTitle(listOption != null ? listOption.getAsString() : DEFAULT_TITLE);
     }
 
-    public static void addCommand(Guild guild)
+    protected static SubcommandData buildSubcommand()
     {
-        guild.upsertCommand(COMMAND, "Add a new item to a list.")
+        return (new SubcommandData(SUBCOMMAND, "Add a new item to a list."))
             .addOption(OptionType.STRING, OPTION_NAME, "Item name.", true)
             .addOption(
                 OptionType.STRING,
@@ -36,8 +37,7 @@ public class AddItemEvent implements AcceptsListEvent
                 "List to add item to. Default: " + DEFAULT_TITLE + ".",
                 false,
                 true
-            )
-            .queue();
+            );
     }
 
     public ListTitle getListTitle()

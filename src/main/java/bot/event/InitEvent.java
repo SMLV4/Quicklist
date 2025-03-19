@@ -1,13 +1,15 @@
 package bot.event;
 
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.jetbrains.annotations.NotNull;
 
 public class InitEvent
 {
-    public static final String          COMMAND = "init";
+    public static final String          COMMAND      = "init";
+    public static final String          COMMAND_PATH = COMMAND;
     private final       InteractionHook hook;
 
     public InitEvent(@NotNull SlashCommandInteractionEvent event)
@@ -15,10 +17,9 @@ public class InitEvent
         this.hook = event.getHook();
     }
 
-    public static void addCommand(Guild guild)
+    public static CommandData buildCommand()
     {
-        guild.upsertCommand(COMMAND, "Initialize a channel for Quicklist. Requires an empty channel.")
-            .queue();
+        return Commands.slash(COMMAND, "Initialize a channel for Quicklist. Requires an empty channel.");
     }
 
     public InteractionHook getHook()

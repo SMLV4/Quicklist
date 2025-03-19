@@ -31,16 +31,17 @@ class AutoCompleteEventListener extends ListenerAdapter
         MessageChannel channel = event.getMessageChannel();
         String         input   = event.getFocusedOption().getValue();
 
+        String commandPath = event.getCommandPath();
         ArrayList<Command.Choice> choices = new ArrayList<>();
         switch (event.getFocusedOption().getName()) {
             case BlockingEvent.OPTION_BLOCKED:
-                choices = event.getName().equals(UnblockEvent.COMMAND)
+                choices = commandPath.equals(UnblockEvent.COMMAND_PATH)
                     ? collectBlockedItemChoices(channel, input)
                     : collectItemChoices(channel, input);
                 break;
             case BlockingEvent.OPTION_BLOCKING:
                 try {
-                    choices = event.getName().equals(UnblockEvent.COMMAND)
+                    choices = commandPath.equals(UnblockEvent.COMMAND_PATH)
                         ? collectBlockingItemChoices(channel, event)
                         : collectItemChoices(channel, input);
                 } catch (Exception e) {
@@ -48,7 +49,7 @@ class AutoCompleteEventListener extends ListenerAdapter
                 }
                 break;
             case AcceptsItemEvent.OPTION_ITEM:
-                choices = event.getName().equals(RemoveNoteEvent.COMMAND)
+                choices = commandPath.equals(RemoveNoteEvent.COMMAND_PATH)
                     ? collectItemChoicesWithNotes(channel, input)
                     : collectItemChoices(channel, input);
                 break;

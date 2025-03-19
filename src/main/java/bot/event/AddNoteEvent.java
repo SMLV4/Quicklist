@@ -1,16 +1,17 @@
 package bot.event;
 
 import bot.entity.ItemId;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.jetbrains.annotations.NotNull;
 
-public class AddNoteEvent implements AcceptsItemEvent
+public class AddNoteEvent implements AcceptsItemEvent, AddCommand
 {
-    public static final  String COMMAND     = "add-note";
-    private static final String OPTION_NOTE = "note";
+    private static final String OPTION_NOTE  = "note";
+    private static final String SUBCOMMAND   = "note";
+    public static final  String COMMAND_PATH = MAIN_COMMAND + "/" + SUBCOMMAND;
     private final        ItemId itemId;
     private final        String note;
 
@@ -26,12 +27,11 @@ public class AddNoteEvent implements AcceptsItemEvent
         this.note = noteOption.getAsString();
     }
 
-    public static void addCommand(Guild guild)
+    protected static SubcommandData buildSubcommand()
     {
-        guild.upsertCommand(COMMAND, "Add a note to an item.")
+        return (new SubcommandData(SUBCOMMAND, "Add a note to an item."))
             .addOption(OptionType.STRING, OPTION_ITEM, "Item to attach note to.", true, true)
-            .addOption(OptionType.STRING, OPTION_NOTE, "Note.", true)
-            .queue();
+            .addOption(OptionType.STRING, OPTION_NOTE, "Note.", true);
     }
 
     public ItemId getItemId()

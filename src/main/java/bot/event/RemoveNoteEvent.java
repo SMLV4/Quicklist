@@ -1,18 +1,19 @@
 package bot.event;
 
 import bot.entity.ItemId;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.jetbrains.annotations.NotNull;
 
-public class RemoveNoteEvent implements AcceptsItemEvent
+public class RemoveNoteEvent implements AcceptsItemEvent, RemoveCommand
 {
-    public static final String COMMAND     = "remove-note";
-    public static final String OPTION_NOTE = "note";
-    private final       ItemId itemId;
-    private final       int    noteIndex;
+    public static final  String OPTION_NOTE  = "note";
+    private static final String SUBCOMMAND   = "note";
+    public static final  String COMMAND_PATH = MAIN_COMMAND + "/" + SUBCOMMAND;
+    private final        ItemId itemId;
+    private final        int    noteIndex;
 
     public RemoveNoteEvent(@NotNull SlashCommandInteractionEvent event)
     {
@@ -28,12 +29,11 @@ public class RemoveNoteEvent implements AcceptsItemEvent
         assert noteIndex > 0;
     }
 
-    public static void addCommand(Guild guild)
+    protected static SubcommandData buildSubcommand()
     {
-        guild.upsertCommand(COMMAND, "Remove a note from an item.")
+        return (new SubcommandData(SUBCOMMAND, "Remove a note from an item."))
             .addOption(OptionType.STRING, OPTION_ITEM, "Item to remove note from.", true, true)
-            .addOption(OptionType.STRING, OPTION_NOTE, "Note.", true, true)
-            .queue();
+            .addOption(OptionType.STRING, OPTION_NOTE, "Note.", true, true);
     }
 
     public ItemId getItemId()

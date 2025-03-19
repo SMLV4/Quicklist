@@ -2,16 +2,17 @@ package bot.event;
 
 import bot.entity.ItemId;
 import bot.entity.ListTitle;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.jetbrains.annotations.NotNull;
 
-public class EditItemEvent implements AcceptsItemEvent, AcceptsListEvent
+public class EditItemEvent implements AcceptsItemEvent, AcceptsListEvent, EditCommand
 {
-    public static final  String    COMMAND         = "edit-item";
-    private static final String    OPTION_NEW_NAME = "new-name";
+    private static final String    OPTION_NAME  = "name";
+    private static final String    SUBCOMMAND   = "item";
+    public static final  String    COMMAND_PATH = MAIN_COMMAND + "/" + SUBCOMMAND;
     private final        ItemId    itemId;
     private final        ListTitle newListTitle;
     private final        String    newName;
@@ -19,7 +20,7 @@ public class EditItemEvent implements AcceptsItemEvent, AcceptsListEvent
     public EditItemEvent(@NotNull SlashCommandInteractionEvent event) throws Exception
     {
         OptionMapping idOption      = event.getOption(OPTION_ITEM);
-        OptionMapping newNameOption = event.getOption(OPTION_NEW_NAME);
+        OptionMapping newNameOption = event.getOption(OPTION_NAME);
         OptionMapping newListOption = event.getOption(OPTION_LIST);
 
         assert idOption != null;
@@ -33,13 +34,12 @@ public class EditItemEvent implements AcceptsItemEvent, AcceptsListEvent
         newListTitle = newListOption != null ? new ListTitle(newListOption.getAsString()) : null;
     }
 
-    public static void addCommand(Guild guild)
+    protected static SubcommandData buildSubcommand()
     {
-        guild.upsertCommand(COMMAND, "Edit item attributes.")
+        return (new SubcommandData(SUBCOMMAND, "Edit item attributes."))
             .addOption(OptionType.STRING, OPTION_ITEM, "Item.", true, true)
-            .addOption(OptionType.STRING, OPTION_NEW_NAME, "New name.", false)
-            .addOption(OptionType.STRING, OPTION_LIST, "List to move item to.", false, true)
-            .queue();
+            .addOption(OptionType.STRING, OPTION_NAME, "New name.", false)
+            .addOption(OptionType.STRING, OPTION_LIST, "New list to move item to.", false, true);
     }
 
     public ItemId getItemId()

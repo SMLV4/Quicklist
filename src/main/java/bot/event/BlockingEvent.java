@@ -4,8 +4,10 @@ import bot.entity.ItemId;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 abstract public class BlockingEvent
 {
@@ -30,10 +32,13 @@ abstract public class BlockingEvent
         }
     }
 
-    protected static CommandCreateAction addOptions(CommandCreateAction command)
+    protected static ArrayList<OptionData> buildBlockingOptions()
     {
-        return command.addOption(OptionType.STRING, OPTION_BLOCKED, "Blocked item.", true, true)
-            .addOption(OptionType.STRING, OPTION_BLOCKING, "Blocking item.", true, true);
+        ArrayList<OptionData> options = new ArrayList<>();
+        options.add(new OptionData(OptionType.STRING, OPTION_BLOCKED, "Blocked item.", true, true));
+        options.add(new OptionData(OptionType.STRING, OPTION_BLOCKING, "Blocking item.", true, true));
+
+        return options;
     }
 
     public ItemId getBlockedItemId()

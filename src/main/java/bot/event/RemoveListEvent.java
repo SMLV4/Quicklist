@@ -1,17 +1,17 @@
 package bot.event;
 
 import bot.entity.ListTitle;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.jetbrains.annotations.NotNull;
 
-public class RemoveListEvent implements AcceptsListEvent
+public class RemoveListEvent implements AcceptsListEvent, RemoveCommand
 {
-    public static final String COMMAND = "remove-list";
-
-    private final ListTitle listTitle;
+    private static final String    SUBCOMMAND   = "list";
+    public static final  String    COMMAND_PATH = MAIN_COMMAND + "/" + SUBCOMMAND;
+    private final        ListTitle listTitle;
 
     public RemoveListEvent(@NotNull SlashCommandInteractionEvent event)
     {
@@ -22,11 +22,10 @@ public class RemoveListEvent implements AcceptsListEvent
         listTitle = new ListTitle(listOption.getAsString());
     }
 
-    public static void addCommand(Guild guild)
+    protected static SubcommandData buildSubcommand()
     {
-        guild.upsertCommand(COMMAND, "Remove a list. Removes all items in that list.")
-            .addOption(OptionType.STRING, OPTION_LIST, "List.", true, true)
-            .queue();
+        return (new SubcommandData(SUBCOMMAND, "Remove a list. Removes all items in that list."))
+            .addOption(OptionType.STRING, OPTION_LIST, "List.", true, true);
     }
 
     public ListTitle getListTitle()
