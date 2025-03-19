@@ -9,6 +9,7 @@ import bot.event.AddItemEvent;
 import bot.event.AddListEvent;
 import bot.event.AddNoteEvent;
 import bot.event.BlockEvent;
+import bot.event.BlockingEvent;
 import bot.event.EditItemEvent;
 import bot.event.EditListEvent;
 import bot.event.Event;
@@ -54,6 +55,10 @@ class EventListener extends ListenerAdapter
 
         ArrayList<Command.Choice> choices = new ArrayList<>();
         switch (event.getFocusedOption().getName()) {
+            // todo: unblock lists only blocked items
+            // todo: unblock second argument lists only items blocking first argument
+            case BlockingEvent.OPTION_BLOCKED:
+            case BlockingEvent.OPTION_BLOCKING:
             case Event.OPTION_ITEM:
                 choices = collectItemChoices(channel, input);
                 break;
@@ -83,9 +88,6 @@ class EventListener extends ListenerAdapter
         try {
             String commandName = event.getName();
             switch (commandName) {
-                case BlockEvent.COMMAND:
-                    BlockEventHandler.handle(event.getChannel(), new BlockEvent(event));
-                    break;
                 case AddItemEvent.COMMAND:
                     AddItemEventHandler.handle(event.getChannel(), new AddItemEvent(event));
                     break;
@@ -95,6 +97,9 @@ class EventListener extends ListenerAdapter
                 case AddNoteEvent.COMMAND:
                     AddNoteEventHandler.handle(event.getChannel(), new AddNoteEvent(event));
                     break;
+                case BlockEvent.COMMAND:
+                    BlockEventHandler.handle(event.getChannel(), new BlockEvent(event));
+                    break;
                 case EditItemEvent.COMMAND:
                     EditItemEventHandler.handle(event.getChannel(), new EditItemEvent(event));
                     break;
@@ -103,9 +108,6 @@ class EventListener extends ListenerAdapter
                     break;
                 case InitEvent.COMMAND:
                     InitEventHandler.handle(event.getChannel(), new InitEvent(event));
-                    break;
-                case UnblockEvent.COMMAND:
-                    UnblockEventHandler.handle(event.getChannel(), new UnblockEvent(event));
                     break;
                 case RemoveItemEvent.COMMAND:
                     RemoveItemEventHandler.handle(event.getChannel(), new RemoveItemEvent(event));
@@ -118,6 +120,9 @@ class EventListener extends ListenerAdapter
                     break;
                 case RollEvent.COMMAND:
                     RollEventHandler.handle(event.getChannel(), new RollEvent(event));
+                    break;
+                case UnblockEvent.COMMAND:
+                    UnblockEventHandler.handle(event.getChannel(), new UnblockEvent(event));
                     break;
             }
         } catch (Throwable exception) {

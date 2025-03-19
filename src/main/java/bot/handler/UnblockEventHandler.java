@@ -17,9 +17,9 @@ public class UnblockEventHandler
         Message catalogMessage = MessageManager.findCatalogMessage(channel);
         Catalog catalog        = EmbedConverter.convertMessageToCatalog(catalogMessage);
 
-        ItemId itemId         = new ItemId(event.getId());
+        ItemId blockedItemId  = new ItemId(event.getBlockedId());
         ItemId blockingItemId = new ItemId(event.getBlockingId());
-        Item   item           = catalog.getItem(itemId);
+        Item   item           = catalog.getItem(blockedItemId);
 
         if (!catalog.hasItem(blockingItemId)) {
             throw new Exception("Item " + blockingItemId + " not found.");
