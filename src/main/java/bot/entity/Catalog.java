@@ -101,6 +101,19 @@ public class Catalog
             .getValue();
     }
 
+    public void moveList(List list, int index)
+    {
+        index = Math.min(index, lists.size());
+        if (lists.indexOf(list) != index) {
+            lists.remove(list);
+            if (index > lists.size()) {
+                lists.add(list);
+            } else {
+                lists.add(index, list);
+            }
+        }
+    }
+
     public Item random(@Nullable ListTitle listTitle) throws Exception
     {
         ArrayList<Item> items = null != listTitle

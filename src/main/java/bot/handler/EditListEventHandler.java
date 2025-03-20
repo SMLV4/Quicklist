@@ -21,6 +21,7 @@ public class EditListEventHandler
         String newTitle    = event.getNewTitle();
         String newShortcut = event.getNewShortcut();
         String newColor    = event.getNewColor();
+        int    newPlace    = event.getNewPlace();
 
         List list = catalog.getNotNullList(event.getListTitle());
 
@@ -34,6 +35,10 @@ public class EditListEventHandler
 
         if (newColor != null) {
             list.updateColor(Color.decode("#" + newColor));
+        }
+
+        if (newPlace > 0) {
+            catalog.moveList(list, newPlace - 1);
         }
 
         MessageManager.updateCatalogMessage(channel, catalogMessage, catalog);
