@@ -31,8 +31,8 @@ class AutoCompleteEventListener extends ListenerAdapter
         MessageChannel channel = event.getMessageChannel();
         String         input   = event.getFocusedOption().getValue();
 
-        String commandPath = event.getCommandPath();
-        ArrayList<Command.Choice> choices = new ArrayList<>();
+        String                    commandPath = event.getCommandPath();
+        ArrayList<Command.Choice> choices     = new ArrayList<>();
         switch (event.getFocusedOption().getName()) {
             case BlockingEvent.OPTION_BLOCKED:
                 choices = commandPath.equals(UnblockEvent.COMMAND_PATH)
@@ -82,7 +82,7 @@ class AutoCompleteEventListener extends ListenerAdapter
             for (Item item : list.getItems()) {
                 String itemChoiceName = buildItemChoiceName(item);
                 if (item.isBlocked() && (input.isEmpty() || itemChoiceName.toLowerCase().contains(input))) {
-                    choices.add(new Command.Choice(itemChoiceName, item.getId().getValue()));
+                    choices.add(new Command.Choice(trimChoice(itemChoiceName), item.getId().getValue()));
                 }
             }
         }
@@ -91,8 +91,7 @@ class AutoCompleteEventListener extends ListenerAdapter
     }
 
     private ArrayList<Command.Choice> collectBlockingItemChoices(
-        MessageChannel channel,
-        CommandAutoCompleteInteractionEvent event
+        MessageChannel channel, CommandAutoCompleteInteractionEvent event
     ) throws Exception
     {
         ArrayList<Command.Choice> choices = new ArrayList<>();
@@ -115,7 +114,7 @@ class AutoCompleteEventListener extends ListenerAdapter
             Item   blockingItem = catalog.getItem(blockingItemId);
             String codeName     = buildItemChoiceName(blockingItem);
             if (input.isEmpty() || codeName.toLowerCase().contains(input)) {
-                choices.add(new Command.Choice(codeName, blockingItem.getId().getValue()));
+                choices.add(new Command.Choice(trimChoice(codeName), blockingItem.getId().getValue()));
             }
         }
 
@@ -134,7 +133,7 @@ class AutoCompleteEventListener extends ListenerAdapter
             for (Item item : list.getItems()) {
                 String codeName = buildItemChoiceName(item);
                 if (input.isEmpty() || codeName.toLowerCase().contains(input)) {
-                    choices.add(new Command.Choice(codeName, item.getId().getValue()));
+                    choices.add(new Command.Choice(trimChoice(codeName), item.getId().getValue()));
                 }
             }
         }
@@ -154,7 +153,7 @@ class AutoCompleteEventListener extends ListenerAdapter
             for (Item item : list.getItems()) {
                 String codeName = buildItemChoiceName(item);
                 if (item.hasNotes() && (input.isEmpty() || codeName.toLowerCase().contains(input))) {
-                    choices.add(new Command.Choice(codeName, item.getId().getValue()));
+                    choices.add(new Command.Choice(trimChoice(codeName), item.getId().getValue()));
                 }
             }
         }
@@ -169,9 +168,9 @@ class AutoCompleteEventListener extends ListenerAdapter
 
         ArrayList<Command.Choice> choices = new ArrayList<>();
         for (List list : catalog.getLists()) {
-            String listTitle = list.getListTitle().toString();
-            if (input.isEmpty() || listTitle.toLowerCase().contains(input)) {
-                choices.add(new Command.Choice(listTitle, listTitle));
+            String titleString = list.getListTitle().toString();
+            if (input.isEmpty() || titleString.toLowerCase().contains(input)) {
+                choices.add(new Command.Choice(trimChoice(titleString), titleString));
             }
         }
 
@@ -179,8 +178,7 @@ class AutoCompleteEventListener extends ListenerAdapter
     }
 
     private ArrayList<Command.Choice> collectNoteChoices(
-        MessageChannel channel,
-        CommandAutoCompleteInteractionEvent event
+        MessageChannel channel, CommandAutoCompleteInteractionEvent event
     ) throws Exception
     {
         ArrayList<Command.Choice> choices = new ArrayList<>();
@@ -201,7 +199,7 @@ class AutoCompleteEventListener extends ListenerAdapter
 
         for (String note : item.getNotes()) {
             if (note.toLowerCase().contains(input)) {
-                choices.add(new Command.Choice(note, item.getNotes().indexOf(note)));
+                choices.add(new Command.Choice(trimChoice(note), item.getNotes().indexOf(note)));
             }
         }
 
@@ -214,6 +212,13 @@ class AutoCompleteEventListener extends ListenerAdapter
         ListTitle listTitle  = item.getListTitle();
         String    listString = Objects.requireNonNullElse(listTitle.getShortcut(), listTitle.getTitle());
 
-        return listString + ": " + item.getName();
+        listString = listString.length() > 25 ? listString.substring(0, 20).trim() + "..." : listString;
+
+        return "[" + listString + "] " + item.getName();
+    }
+
+    private static String trimChoice(String choice)
+    {
+        return choice.length() > 99 ? choice.substring(0, 95).trim() + "..." : choice;
     }
 }
